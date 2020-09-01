@@ -9,6 +9,7 @@ if (System.getenv("GITHUB_RUN_NUMBER") != null) plugin_version += ".${System.get
 
 //Replace @plugin_version@ inside plugin.yml with the proper version
 import org.apache.tools.ant.filters.ReplaceTokens
+
 processResources {
     filter ReplaceTokens, tokens: [plugin_version: plugin_version]
 }
@@ -21,4 +22,23 @@ if (project.hasProperty("plugin_path") && plugin_path) {
         doLast { println("Copied to plugin directory $plugin_path") }
     }
     build.dependsOn copyJar
+}
+
+/**
+ * Publishes to a certain GitHub repo's packages, from components.java.
+ * Requires {@code io.github.0ffz.github-packages} plugin to be applied.
+ *
+ * @param name "owner/repo" for the GitHub repo to publish to.
+ */
+void publishToGithubPackages(String name) {
+    publishing {
+        repositories {
+            maven githubPackagePublish.invoke(name)
+        }
+        publications {
+            gpr(MavenPublication) {
+                from components.java
+            }
+        }
+    }
 }
