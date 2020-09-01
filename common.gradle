@@ -24,12 +24,14 @@ if (project.hasProperty("plugin_path") && plugin_path) {
     build.dependsOn copyJar
 }
 
+//TODO can't get method calls from outside the script to work
 /**
  * Publishes to a certain GitHub repo's packages, from components.java.
  * Requires {@code io.github.0ffz.github-packages} plugin to be applied.
  *
  * @param name "owner/repo" for the GitHub repo to publish to.
  */
+/*
 void publishToGithubPackages(String name) {
     publishing {
         repositories {
@@ -41,4 +43,4 @@ void publishToGithubPackages(String name) {
             }
         }
     }
-}
+}*/
