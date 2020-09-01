@@ -8,6 +8,7 @@ java {
 if (System.getenv("GITHUB_RUN_NUMBER") != null) plugin_version += ".${System.getenv("GITHUB_RUN_NUMBER")}"
 
 //Replace @plugin_version@ inside plugin.yml with the proper version
+import org.apache.tools.ant.filters.ReplaceTokens
 processResources {
     filter ReplaceTokens, tokens: [plugin_version: plugin_version]
 }
