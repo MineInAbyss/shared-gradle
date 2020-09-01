@@ -1,0 +1,23 @@
+//Set Java version and specify publish should produce a sources jar
+java {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    withSourcesJar()
+}
+
+//Add run number to version
+if (System.getenv("GITHUB_RUN_NUMBER") != null) plugin_version += ".${System.getenv("GITHUB_RUN_NUMBER")}"
+
+//Replace @plugin_version@ inside plugin.yml with the proper version
+processResources {
+    filter ReplaceTokens, tokens: [plugin_version: plugin_version]
+}
+
+//Move into plugins folder
+if (project.hasProperty("plugin_path") && plugin_path) {
+    task copyJar(type: Copy) {
+        from shadowJar // here it automatically reads jar file produced from jar task
+        into plugin_path
+        doLast { println("Copied to plugin directory $plugin_path") }
+    }
+    build.dependsOn copyJar
+}
