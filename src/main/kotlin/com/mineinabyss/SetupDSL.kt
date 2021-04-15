@@ -15,8 +15,6 @@ class SetupDSL(private val project: Project) {
     var addGithubRunNumber = true
     var copyJar = true
 
-    private val pluginVersion: String by project
-
     fun applyToProject() = project.run {
         if (applyJavaDefaults)
             extensions.configure<JavaPluginExtension>("java") {
@@ -25,7 +23,7 @@ class SetupDSL(private val project: Project) {
             }
         if (processResources)
             tasks.named<ProcessResources>("processResources") {
-                expand(mapOf("plugin_version" to pluginVersion))
+                expand(mutableMapOf("plugin_version" to version))
             }
 
         if (addGithubRunNumber) {
@@ -34,7 +32,6 @@ class SetupDSL(private val project: Project) {
         }
 
         val plugin_path: String? by project
-        println(plugin_path)
         if (copyJar && plugin_path != null) {
             tasks.register("copyJar", Copy::class.java) {
                 from(tasks.named("shadowJar"))
