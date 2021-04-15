@@ -23,8 +23,8 @@ publishing {
     repositories {
         maven("https://repo.mineinabyss.com/releases") {
             credentials {
-                username = project.findProperty("mineinabyssMavenUsername") as String
-                password = project.findProperty("mineinabyssMavenPassword") as String
+                username = project.findProperty("mineinabyssMavenUsername") as String?
+                password = project.findProperty("mineinabyssMavenPassword") as String?
             }
         }
     }
