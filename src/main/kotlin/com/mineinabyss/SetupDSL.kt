@@ -10,7 +10,14 @@ import org.gradle.language.jvm.tasks.ProcessResources
 import kotlin.reflect.KFunction0
 
 class SetupDSL(private val project: Project) {
-    private val run = mutableSetOf<Function0<Any>>()
+    private val run = mutableSetOf<Function0<*>>()
+    private val alreadyRan = mutableSetOf<Function<*>>()
+
+    private fun runOnce(func: Project.() -> Unit) {
+        if (func in alreadyRan) return
+        project.func()
+        alreadyRan += func
+    }
 
     fun all() {
         run += setOf(
@@ -21,26 +28,26 @@ class SetupDSL(private val project: Project) {
         )
     }
 
-    fun applyJavaDefaults() = project.run {
+    fun applyJavaDefaults() = runOnce {
         extensions.configure<JavaPluginExtension>("java") {
             sourceCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
         }
     }
 
-    fun processResources() = project.run {
+    fun processResources() = runOnce {
         tasks.named<ProcessResources>("processResources") {
             expand(mutableMapOf("plugin_version" to version))
         }
     }
 
-    fun addGithubRunNumber() = project.run {
+    fun addGithubRunNumber() = runOnce {
         val runNumber = System.getenv("GITHUB_RUN_NUMBER")
         if (runNumber != null) version = "$version.$runNumber"
     }
 
-    fun copyJar() = project.run {
-        val pluginPath = project.findProperty("plugin_path") ?: return@run
+    fun copyJar() = runOnce {
+        val pluginPath = project.findProperty("plugin_path") ?: return@runOnce
 
         tasks.register("copyJar", Copy::class.java) {
             from(tasks.named("shadowJar"))
@@ -55,15 +62,19 @@ class SetupDSL(private val project: Project) {
         }
     }
 
-    fun except(vararg functions: KFunction0<Any> = arrayOf()) {
+    fun except(vararg functions: KFunction0<*> = arrayOf()) {
         run -= functions
     }
 
     internal fun execute() = run.forEach { it() }
 }
 
+private val cachedSetup = mutableMapOf<String, SetupDSL>()
+
 fun Project.sharedSetup(init: (SetupDSL.() -> Unit)? = null) {
-    SetupDSL(project).apply {
+    val setup = cachedSetup.getOrPut(project.path, { SetupDSL(project) })
+
+    setup.apply {
         if (init == null) all()
         else init()
         execute()
