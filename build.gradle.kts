@@ -8,6 +8,11 @@ repositories {
     gradlePluginPortal()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+}
+
 gradlePlugin {
     plugins {
         register("shared-gradle") {
