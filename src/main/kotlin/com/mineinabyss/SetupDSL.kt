@@ -4,10 +4,9 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.*
 import org.gradle.kotlin.dsl.named
 import org.gradle.language.jvm.tasks.ProcessResources
-import kotlin.reflect.KFunction0
 
 class SetupDSL(private val project: Project) {
     private val run = mutableSetOf<Function0<*>>()
@@ -27,6 +26,12 @@ class SetupDSL(private val project: Project) {
             ::copyJar,
         )
     }
+
+    fun except(vararg functions: Function0<*> = arrayOf()) {
+        run -= functions
+    }
+
+    internal fun execute() = run.forEach { it() }
 
     fun applyJavaDefaults() = runOnce {
         extensions.configure<JavaPluginExtension>("java") {
@@ -61,18 +66,11 @@ class SetupDSL(private val project: Project) {
             dependsOn("copyJar")
         }
     }
-
-    fun except(vararg functions: KFunction0<*> = arrayOf()) {
-        run -= functions
-    }
-
-    internal fun execute() = run.forEach { it() }
 }
 
-private val cachedSetup = mutableMapOf<String, SetupDSL>()
-
 fun Project.sharedSetup(init: (SetupDSL.() -> Unit)? = null) {
-    val setup = cachedSetup.getOrPut(project.path, { SetupDSL(project) })
+    val setup = project.extensions.findByType(SetupDSL::class.java)
+        ?: SetupDSL(project).also { project.extensions.add("sharedSetup", it) }
 
     setup.apply {
         if (init == null) all()
