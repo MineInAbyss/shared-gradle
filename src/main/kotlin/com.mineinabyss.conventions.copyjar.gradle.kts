@@ -3,10 +3,10 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-val copyJar: Boolean? by project
+val copyJar: String? by project
 val pluginPath = project.findProperty("plugin_path")
 
-if(copyJar != false && pluginPath != null) {
+if(copyJar.toBoolean() && pluginPath != null) {
     tasks {
         register<Copy>("copyJar") {
             from(shadowJar)
