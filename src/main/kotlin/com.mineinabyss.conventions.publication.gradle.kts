@@ -7,6 +7,7 @@ plugins {
 val runNumber: String? = System.getenv("GITHUB_RUN_NUMBER")
 val runNumberDelimiter: String? by project
 val addRunNumber: String? by project
+val publishComponentName: String? by project
 
 if (addRunNumber != "false" && runNumber != null)
     version = "$version${runNumberDelimiter ?: '.'}$runNumber"
@@ -26,7 +27,7 @@ publishing {
     }
     publications {
         register("maven", MavenPublication::class) {
-            from(components["java"])
+            from(components[publishComponentName ?: "java"])
         }
     }
 }

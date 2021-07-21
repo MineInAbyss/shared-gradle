@@ -5,32 +5,12 @@
 
 # shared-gradle
 
-Code that helps us share common shortcuts for our buildscripts. Includes a gradle plugin written in Kotlin, plus some groovy scripts that can be applied directly via url.
+Code that helps us share common shortcuts for our buildscripts. The project is a plugin itself which provides some
+shared functions we may want to reuse, as well as several other conventions plugins that apply common build logic.
 
-## Features
-- `miaSharedSetup()` DSL for running commonly executed tasks:
-  - Sets java sources version to 1.8, asks to provide sources jar
-  - processResources task to replace plugin version token in the plugin config
-  - Adds .GITHUB_RUN_NUMBER to the project `version`
-  - copyJar into a plugin_path defined in your global gradle.properties
-- Some shortcuts for our own repos like the `mineInAbyss()` repository or special block inside `publishing { }`
+## Usage
 
-## Using the plugin
-
-This plugin provides many extension functions as well as a dsl for common setup actions we don't want to repeat.
-
-We host this on our own maven repo since there is little use for this plugin outside sharing our own build scripts, and this avoids potential wait times on the gradle plugin portal.
-
-#### `build.gradle.kts`
- ```kotlin
- plugins {
-     id("com.mineinabyss.shared-gradle") version "0.0.1"
- }
- 
- miaSharedSetup() // DSL for running tasks we commonly want to reuse like copyJar
- ```
- 
-#### `settings.gradle.kts`
+Add the mineinabyss repo to `settings.gradle.kts`
 ```kotlin
 pluginManagement {
     repositories {
@@ -40,10 +20,64 @@ pluginManagement {
 }
 ```
 
-## Groovy files
+Apply a plugin in your `plugins { }` block. All of them start with `com.mineinabyss.conventions`
 
-Some files are meant to be applied inside plugins. We'll likely be phasing these out in favor of type-safe Kotlin DSLs.
-
-```groovy
-apply from: 'https://raw.githubusercontent.com/MineInAbyss/shared-gradle/master/common.gradle'
+```kotlin
+plugins {
+  id("com.mineinabyss.conventions.SOMETHING")
+}
 ```
+
+Some conventions have extra config options that may be specified in your gradle.properties, they are explained further down.
+
+### Use the same version for all conventions
+
+`settings.gradle.kts`:
+```kotlin
+pluginManagement {
+  val miaConventionsVersion: String by settings
+
+  resolutionStrategy {
+    eachPlugin {
+      if (requested.id.id.startsWith("com.mineinabyss.conventions"))
+        useVersion(sharedGradleVersion)
+    }
+  }
+}
+```
+
+Specify the version in `gradle.properties`
+
+## Conventions
+
+#### com.mineinabyss.conventions.copyjar
+
+Copies a generated `shadowJar` artifact to a specified path.
+
+- `plugin_path: String` The path to copy the jar to. (should be set in global gradle.properties.)
+- `copyJar: Boolean?` if false, will not run.
+
+#### com.mineinabyss.conventions.kotlin
+
+Adds Kotlin, shadowjar and slimjar plugins. Applies our KotlinSpice platform of dependencies.
+
+#### com.mineinabyss.conventions.papermc
+
+Adds paper dependencies, process resources task which replaces `${plugin_version}` in plugin.yml with the project's `version`. Targets JVM 16.
+
+- `serverVersion: String` the full Minecraft server version name.
+- `useNMS: Boolean?` if true, will depend on NMS.
+
+#### com.mineinabyss.conventions.publication
+
+Publishes to our maven repo with sources. Adds GitHub run number to the end of version.
+
+- `runNumberDelimiter: String? = "."` the characters to put in between the version and run number.
+- `addRunNumber: String?` if false, will not add run number.
+- `publishComponentName: String? = "java"` the name of the component to be published.
+- `mineinabyssMavenUsername: String`
+- `mineinabyssMavenPassword: String`
+
+#### com.mineinabyss.conventions.testing
+
+Uses jUnit platform for testing, adds kotest and mockk dependencies.
