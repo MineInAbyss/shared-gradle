@@ -8,7 +8,6 @@ val runNumber: String? = System.getenv("GITHUB_RUN_NUMBER")
 if (runNumber != null) version = "$version.$runNumber"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
     withSourcesJar()
 }
 

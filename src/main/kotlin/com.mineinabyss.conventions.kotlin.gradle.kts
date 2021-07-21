@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    slim(kotlin("stdlib-jdk8"))
-    slim(platform("com.mineinabyss:kotlinspice:${kotlinVersion}+"))
+    compileOnly(kotlin("stdlib-jdk8"))
+    compileOnly(platform("com.mineinabyss:kotlinspice:${kotlinVersion}+"))
 //    slim(platform("com.mineinabyss.platforms:kotlin:${kotlinVersion}+"))
 }
