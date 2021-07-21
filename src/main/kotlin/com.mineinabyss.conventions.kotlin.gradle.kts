@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation("io.github.slimjar:slimjar:1.2.4")
     compileOnly(kotlin("stdlib-jdk8"))
     compileOnly(platform("com.mineinabyss:kotlinspice:${kotlinVersion}+"))
 }
