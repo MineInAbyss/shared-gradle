@@ -6,7 +6,7 @@ plugins {
 val copyJar: String? by project
 val pluginPath = project.findProperty("plugin_path")
 
-if(copyJar.toBoolean() && pluginPath != null) {
+if(copyJar != "false" && pluginPath != null) {
     tasks {
         register<Copy>("copyJar") {
             from(shadowJar)

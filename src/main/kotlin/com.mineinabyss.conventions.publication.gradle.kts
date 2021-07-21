@@ -5,7 +5,11 @@ plugins {
 }
 
 val runNumber: String? = System.getenv("GITHUB_RUN_NUMBER")
-if (runNumber != null) version = "$version.$runNumber"
+val runNumberDelimiter: String? by project
+val addRunNumber: String? by project
+
+if (addRunNumber != "false" && runNumber != null)
+    version = "$version${runNumberDelimiter ?: '.'}$runNumber"
 
 java {
     withSourcesJar()
