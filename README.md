@@ -40,7 +40,7 @@ pluginManagement {
   resolutionStrategy {
     eachPlugin {
       if (requested.id.id.startsWith("com.mineinabyss.conventions"))
-        useVersion(sharedGradleVersion)
+        useVersion(miaConventionsVersion)
     }
   }
 }
@@ -50,25 +50,25 @@ Specify the version in `gradle.properties`
 
 ## Conventions
 
-#### com.mineinabyss.conventions.copyjar
+### com.mineinabyss.conventions.copyjar
 
 Copies a generated `shadowJar` artifact to a specified path.
 
 - `plugin_path: String` The path to copy the jar to. (should be set in global gradle.properties.)
 - `copyJar: Boolean?` if false, will not run.
 
-#### com.mineinabyss.conventions.kotlin
+### com.mineinabyss.conventions.kotlin
 
 Adds Kotlin, shadowjar and slimjar plugins. Applies our KotlinSpice platform of dependencies.
 
-#### com.mineinabyss.conventions.papermc
+### com.mineinabyss.conventions.papermc
 
 Adds paper dependencies, process resources task which replaces `${plugin_version}` in plugin.yml with the project's `version`. Targets JVM 16.
 
 - `serverVersion: String` the full Minecraft server version name.
 - `useNMS: Boolean?` if true, will depend on NMS.
 
-#### com.mineinabyss.conventions.publication
+### com.mineinabyss.conventions.publication
 
 Publishes to our maven repo with sources. Adds GitHub run number to the end of version.
 
@@ -78,6 +78,6 @@ Publishes to our maven repo with sources. Adds GitHub run number to the end of v
 - `mineinabyssMavenUsername: String`
 - `mineinabyssMavenPassword: String`
 
-#### com.mineinabyss.conventions.testing
+### com.mineinabyss.conventions.testing
 
 Uses jUnit platform for testing, adds kotest and mockk dependencies.
