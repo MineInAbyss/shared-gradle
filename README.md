@@ -61,7 +61,9 @@ Copies a generated `shadowJar` artifact to a specified path.
 
 Adds Kotlin, shadowjar and slimjar plugins. Applies our KotlinSpice platform of dependencies.
 
-- `kotlinVersion: String` Version of Kotlin which currently should match the version of the dependency included in the convention. (In the future this will hopefully automatically be resolved for you.
+Adds a `kotlinVersion` property to the project and warns if the project already has such a property that doesn't match.
+
+This plugin will also apply the appropriate plugin version for the `kotlinx.serialization` plugin. There is no easy way to use a different Kotlin version with this convention.
 
 ### com.mineinabyss.conventions.papermc
 

@@ -18,9 +18,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$serverVersion")
+    // Use old papermc groupId with versions below 1.17
+    val (major, minor) = serverVersion.split('.').take(2).map { it.toInt() }
+    val paperGroup =
+        if(major == 1 && minor < 17) "com.destroystokyo.paper"
+        else "io.papermc.paper"
+
+    compileOnly("$paperGroup:paper-api:$serverVersion")
     if(useNMS.toBoolean())
-        compileOnly("io.papermc.paper:paper:$serverVersion") // NMS
+        compileOnly("$paperGroup:paper:$serverVersion") // NMS
 }
 
 tasks {
