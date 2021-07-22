@@ -61,6 +61,8 @@ Copies a generated `shadowJar` artifact to a specified path.
 
 Adds Kotlin, shadowjar and slimjar plugins. Applies our KotlinSpice platform of dependencies.
 
+- `kotlinVersion: String` Version of Kotlin which currently should match the version of the dependency included in the convention. (In the future this will hopefully automatically be resolved for you.
+
 ### com.mineinabyss.conventions.papermc
 
 Adds paper dependencies, process resources task which replaces `${plugin_version}` in plugin.yml with the project's `version`. Targets JVM 16.
