@@ -15,7 +15,17 @@ Add the mineinabyss repo to `settings.gradle.kts`
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://repo.mineinabyss.com/releases") // Add our repository to be able to access the plugin
+        // Add our repository to be able to access the plugin
+        maven("https://repo.mineinabyss.com/releases")
+    }    
+    
+    //Use same version across all conventions
+    val miaConventionsVersion: String by settings
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith("com.mineinabyss.conventions"))
+                useVersion(miaConventionsVersion)
+        }
     }
 }
 ```
@@ -30,23 +40,13 @@ plugins {
 
 Some conventions have extra config options that may be specified in your gradle.properties, they are explained further down.
 
-### Use the same version for all conventions
+If you're using the `resolutionStrategy` block, be sure to specify the `miaConventionsVersion` in `gradle.properties`:
 
-`settings.gradle.kts`:
-```kotlin
-pluginManagement {
-  val miaConventionsVersion: String by settings
-
-  resolutionStrategy {
-    eachPlugin {
-      if (requested.id.id.startsWith("com.mineinabyss.conventions"))
-        useVersion(miaConventionsVersion)
-    }
-  }
-}
+```properties
+miaConventionsVersion=0.x.x
 ```
 
-Specify the version in `gradle.properties`
+See maven badge at the top for the latest version.
 
 ## Conventions
 
@@ -65,7 +65,7 @@ Adds Kotlin, shadowjar and slimjar plugins. Applies our KotlinSpice platform of 
 
 ### com.mineinabyss.conventions.papermc
 
-Adds paper dependencies, process resources task which replaces `${plugin_version}` in plugin.yml with the project's `version`. Targets JVM 16.
+Adds paper dependencies, process resources task which replaces `${plugin_version}` in plugin.yml with the project's `version`. Targets JVM 16. Adds copyJar plugin.
 
 - `serverVersion: String` the full Minecraft server version name.
 - `useNMS: Boolean?` if true, will depend on NMS.
