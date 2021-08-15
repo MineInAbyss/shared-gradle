@@ -28,6 +28,7 @@ if(kotlinVersion == null)
 repositories {
     mavenCentral()
     maven("https://repo.mineinabyss.com/releases")
+    maven("https://repo.vshnv.tech/releases/") // Slimjar
 }
 
 dependencies {
