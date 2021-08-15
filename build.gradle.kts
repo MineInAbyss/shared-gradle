@@ -16,7 +16,7 @@ dependencies {
     implementation(kotlin("gradle-plugin", kotlinVersion))
     implementation(kotlin("serialization", kotlinVersion))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.5.0")
-    implementation("io.github.slimjar:gradle-plugin:1.2.1")
+    implementation("io.github.slimjar:gradle-plugin:1.2.2")
     implementation("gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0")
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))

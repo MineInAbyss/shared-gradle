@@ -32,6 +32,6 @@ repositories {
 
 dependencies {
     compileOnly(kotlin("stdlib-jdk8"))
-    implementation("io.github.slimjar:slimjar:1.2.4")
+    implementation("io.github.slimjar:slimjar:1.2.5")
     slim(platform("com.mineinabyss:kotlinspice:${conventionsKotlinVersion}+"))
 }
