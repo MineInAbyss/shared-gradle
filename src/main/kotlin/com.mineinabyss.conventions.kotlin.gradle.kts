@@ -36,6 +36,6 @@ dependencies {
     compileOnly(kotlin("stdlib-jdk8"))
     implementation("io.github.slimjar:slimjar:1.2.5")
     // Default to min version that includes slimjar dependency
-    implementation("com.mineinabyss.idofront:idofront-slimjar:${idofrontVersion ?: "1.17.1-0.6.24"}")
+    implementation("com.mineinabyss:idofront-slimjar:${idofrontVersion ?: "1.17.1-0.6.24"}")
     slim(platform("com.mineinabyss:kotlinspice:${conventionsKotlinVersion}+"))
 }
