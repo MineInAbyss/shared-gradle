@@ -6,8 +6,9 @@ plugins {
 }
 
 //TODO try to figure out a clean way to read the version automatically.
-val conventionsKotlinVersion = "1.5.21"
+val conventionsKotlinVersion = "1.5.30"
 val kotlinVersion: String? by project
+val idofrontVersion: String? by project
 
 if (kotlinVersion != null && conventionsKotlinVersion != kotlinVersion)
     logger.error(
@@ -34,5 +35,7 @@ repositories {
 dependencies {
     compileOnly(kotlin("stdlib-jdk8"))
     implementation("io.github.slimjar:slimjar:1.2.5")
+    // Default to min version that includes slimjar dependency
+    implementation("com.mineinabyss.idofront:idofront-slimjar:${idofrontVersion ?: "1.17.1-0.6.24"}")
     slim(platform("com.mineinabyss:kotlinspice:${conventionsKotlinVersion}+"))
 }
